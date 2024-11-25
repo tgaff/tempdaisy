@@ -1,11 +1,12 @@
 # frozen_string_literal: true
 
 require_relative "lib/tailwindcss/ruby/version"
+require_relative "lib/daisyui/ruby"
 
 Gem::Specification.new do |spec|
   spec.name = "daisyui-ruby"
-  spec.version = Tailwindcss::Ruby::VERSION
-  spec.authors = ["Authors of the upstream Tailwindcss-ruby gem and Travis Gaff"]
+  spec.version = Daisyui::Ruby::VERSION
+  spec.authors = ["Authors of the upstream Tailwindcss-ruby gem this is based on and Travis Gaff"]
   spec.email = ["tgaff@noreply.github.com"]
 
   spec.summary = "A self-contained `tailwindcss` executable including Daisy UI."

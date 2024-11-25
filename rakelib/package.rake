@@ -66,12 +66,14 @@
 require "rubygems/package_task"
 require "open-uri"
 require_relative "../lib/tailwindcss/ruby/upstream"
+require_relative "../lib/daisyui/ruby/upstream"
 
 def tailwindcss_download_url(filename)
-  "https://github.com/tailwindlabs/tailwindcss/releases/download/#{Tailwindcss::Ruby::Upstream::VERSION}/#{filename}"
+  # "https://github.com/tailwindlabs/tailwindcss/releases/download/#{Tailwindcss::Ruby::Upstream::VERSION}/#{filename}"
+  "https://github.com/dobicinaitis/tailwind-cli-extra/releases/download/#{Tailwindcss::UpstreamExtra::VERSION}/#{filename}"
 end
 
-TAILWINDCSS_RUBY_GEMSPEC = Bundler.load_gemspec("tailwindcss-ruby.gemspec")
+TAILWINDCSS_RUBY_GEMSPEC = Bundler.load_gemspec("daisyui-ruby.gemspec")
 
 # prepend the download task before the Gem::PackageTask tasks
 task package: :download
@@ -81,7 +83,7 @@ desc "Build the ruby gem"
 task "gem:ruby" => [gem_path]
 
 exepaths = []
-Tailwindcss::Ruby::Upstream::NATIVE_PLATFORMS.each do |platform, filename|
+Daisyui::Ruby::Upstream::NATIVE_PLATFORMS.each do |platform, filename|
   TAILWINDCSS_RUBY_GEMSPEC.dup.tap do |gemspec|
     exedir = File.join(gemspec.bindir, platform) # "exe/x86_64-linux"
     exepath = File.join(exedir, "tailwindcss") # "exe/x86_64-linux/tailwindcss"
