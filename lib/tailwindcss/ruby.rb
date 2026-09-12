@@ -6,7 +6,7 @@ require_relative "ruby/upstream"
 module Tailwindcss
   module Ruby
     DEFAULT_DIR = File.expand_path(File.join(__dir__, "..", "..", "exe"))
-    GEM_NAME = "tailwindcss-ruby"
+    GEM_NAME = "daisyui-ruby"
 
     # raised when the host platform is not supported by upstream tailwindcss's binary releases
     class UnsupportedPlatformException < StandardError

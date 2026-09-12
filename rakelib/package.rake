@@ -69,10 +69,10 @@ require "open-uri"
 require_relative "../lib/tailwindcss/ruby/upstream"
 
 def tailwindcss_download_url(filename)
-  "https://github.com/tailwindlabs/tailwindcss/releases/download/#{Tailwindcss::Ruby::Upstream::VERSION}/#{filename}"
+  "https://github.com/dobicinaitis/tailwind-cli-extra/releases/download/#{Tailwindcss::Ruby::Upstream::VERSION}/#{filename}"
 end
 
-TAILWINDCSS_RUBY_GEMSPEC = Bundler.load_gemspec("tailwindcss-ruby.gemspec")
+TAILWINDCSS_RUBY_GEMSPEC = Bundler.load_gemspec("daisyui-ruby.gemspec")
 
 # prepend the download task before the Gem::PackageTask tasks
 task :package => :download
@@ -115,18 +115,16 @@ end
 
 desc "Validate checksums for tailwindcss binaries"
 task "check" => exepaths do
-  sha_filename = File.absolute_path("../package/tailwindcss-#{Tailwindcss::Ruby::Upstream::VERSION}-checksums.txt", __dir__)
-  sha_url = if File.exist?(sha_filename)
-    sha_filename
-  else
-    sha_url = tailwindcss_download_url("sha256sums.txt")
-  end
-  gemspec = TAILWINDCSS_RUBY_GEMSPEC
+  require "json"
 
-  checksums = URI.open(sha_url).each_line.map do |line|
-    checksum, file = line.split
-    [File.basename(file), checksum]
-  end.to_h
+  # tailwind-cli-extra does not publish a sha256sums.txt, but each release
+  # asset carries a sha256 digest in the GitHub API response.
+  release_url = "https://api.github.com/repos/dobicinaitis/tailwind-cli-extra/releases/tags/#{Tailwindcss::Ruby::Upstream::VERSION}"
+  release = URI.open(release_url, "Accept" => "application/vnd.github+json") do |f|
+    JSON.parse(f.read)
+  end
+  checksums = release["assets"].to_h { |asset| [asset["name"], asset["digest"].delete_prefix("sha256:")] }
+  gemspec = TAILWINDCSS_RUBY_GEMSPEC
 
   Tailwindcss::Ruby::Upstream::NATIVE_PLATFORMS.each do |platform, filename|
     exedir = File.join(gemspec.bindir, platform) # "exe/x86_64-linux"
